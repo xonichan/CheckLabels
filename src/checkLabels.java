@@ -1,21 +1,26 @@
 public class checkLabels {
 
+    //Абстрогированный фильтр в интерфейса
     interface TextAnalyzer {
         Label processText(String text);
     }
 
+    //тип-перечисление, которые содержит метки, которыми будем помечать текст
     enum Label {
         SPAM, NEGATIVE_TEXT, TOO_LONG, OK
     }
 
+
+    //Основной метод
     public Label checkLabels(TextAnalyzer[] analyzers, String text) {
+
         return Label.OK;
     }
 
 
 
     public void run(String[] args) {
-        System.out.println("Fun");
+
 
         // тесты
 
@@ -64,7 +69,7 @@ public class checkLabels {
         tests[7] = "Very bad, very neg =(, very ..................";      // SPAM or NEGATIVE_TEXT or TOO_LONG
         TextAnalyzer[][] textAnalyzers = {textAnalyzers1, textAnalyzers2, textAnalyzers3,
                 textAnalyzers4, textAnalyzers5, textAnalyzers6};
-
+        checkLabels testObject = new checkLabels();
         int numberOfAnalyzer; // номер анализатора, указанный в идентификаторе textAnalyzers{№}
         int numberOfTest = 0; // номер теста, который соответствует индексу тестовых комментариев
         for (String test : tests) {
@@ -73,11 +78,12 @@ public class checkLabels {
             System.out.println(test);
             for (TextAnalyzer[] analyzers : textAnalyzers) {
                 System.out.print(numberOfAnalyzer + ": ");
-                //System.out.println(testObject.checkLabels(analyzers, test));
+                System.out.println(testObject.checkLabels(analyzers, test));
                 numberOfAnalyzer++;
             }
-            numberOfTest++;
+            numberOfTest++; 
         }
+        System.out.println("Fin");
     }
 
     public static void main(String[] args) {
@@ -90,15 +96,30 @@ public class checkLabels {
         }
     }
 
-
-    public abstract class SpamAnalyzer implements TextAnalyzer {
+    public class SpamAnalyzer implements TextAnalyzer {
         public SpamAnalyzer(String[] spamKeywords) {
+        }
 
-
-
+        @Override
+        public Label processText(String text) {
+            return null;
         }
     }
 
-    public abstract class NegativeTextAnalyzer implements TextAnalyzer {
+    private class NegativeTextAnalyzer implements TextAnalyzer {
+        @Override
+        public Label processText(String text) {
+            return null;
+        }
+    }
+
+    private class TooLongTextAnalyzer implements TextAnalyzer {
+        public TooLongTextAnalyzer(int commentMaxLength) {
+        }
+
+        @Override
+        public Label processText(String text) {
+            return null;
+        }
     }
 }
