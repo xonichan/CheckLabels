@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.List;
+
 public class checkLabels {
 
     //Абстрогированный фильтр в интерфейса
@@ -58,6 +61,8 @@ public class checkLabels {
                 new SpamAnalyzer(spamKeywords)
         };
         // тестовые комментарии
+        //System.out.println(textAnalyzers1.);
+
         String[] tests = new String[8];
         tests[0] = "This comment is so good.";                            // OK
         tests[1] = "This comment is so Loooooooooooooooooooooooooooong."; // TOO_LONG
@@ -97,7 +102,14 @@ public class checkLabels {
     }
 
     public class SpamAnalyzer implements TextAnalyzer {
+        List<String> spamArr;
+
         public SpamAnalyzer(String[] spamKeywords) {
+            if (spamKeywords != null) {
+                spamArr = Arrays.asList(spamKeywords);
+                System.out.println("add");
+            }
+
         }
 
         @Override
@@ -114,7 +126,13 @@ public class checkLabels {
     }
 
     private class TooLongTextAnalyzer implements TextAnalyzer {
+        int comment_MaxLength;
+
         public TooLongTextAnalyzer(int commentMaxLength) {
+            if (commentMaxLength>0) {
+                comment_MaxLength = commentMaxLength;
+                System.out.println("add MaxLength");
+            }
         }
 
         @Override
