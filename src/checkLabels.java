@@ -1,8 +1,10 @@
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class checkLabels {
+import static java.lang.String.*;
 
+public class checkLabels {
     //Абстрогированный фильтр в интерфейса
     interface TextAnalyzer {
         Label processText(String text);
@@ -16,11 +18,79 @@ public class checkLabels {
 
     //Основной метод
     public Label checkLabels(TextAnalyzer[] analyzers, String text) {
+        Label result = Label.OK;
 
-        return Label.OK;
+        for (TextAnalyzer analyzText : analyzers) {
+
+            if (analyzText.processText(text) != Label.OK) {
+                result = analyzText.processText(text);
+            }
+        }
+        return result;
     }
 
 
+    public class SpamAnalyzer implements TextAnalyzer {
+        List<String> keywords;
+        Label resultSA = Label.OK;
+
+        public SpamAnalyzer(String[] spamKeywords) {
+            if (spamKeywords != null) {
+                keywords = Arrays.asList(spamKeywords);
+                System.out.println("add");
+            }
+
+        }
+
+        @Override
+        public Label processText(String text) {
+            for (String kWord : keywords) {
+                if (text.contains(kWord)) {
+                    resultSA = Label.SPAM;
+                }
+            }
+            return resultSA;
+        }
+    }
+
+    private class NegativeTextAnalyzer implements TextAnalyzer {
+        List<String> keywords;
+        Label resultNTA = Label.OK;
+
+        private NegativeTextAnalyzer() {
+            keywords = Arrays.asList(new String[]{":(", "=(", ":|"});
+        }
+
+
+        @Override
+        public Label processText(String text)
+
+        {
+            for (String kWord : keywords) {
+                if (text.contains(kWord)) {
+                    resultNTA = Label.NEGATIVE_TEXT;
+                }
+            }
+            return resultNTA;
+        }
+    }
+
+    private class TooLongTextAnalyzer implements TextAnalyzer {
+        int comment_MaxLength;
+
+        public TooLongTextAnalyzer(int commentMaxLength) {
+            if (commentMaxLength > 0) {
+                comment_MaxLength = commentMaxLength;
+                System.out.println("add MaxLength");
+            }
+        }
+
+        @Override
+        public Label processText(String text) {
+            if (text.length() < comment_MaxLength) return Label.OK;
+            else return Label.TOO_LONG;
+        }
+    }
 
     public void run(String[] args) {
 
@@ -60,8 +130,6 @@ public class checkLabels {
                 new TooLongTextAnalyzer(commentMaxLength),
                 new SpamAnalyzer(spamKeywords)
         };
-        // тестовые комментарии
-        //System.out.println(textAnalyzers1.);
 
         String[] tests = new String[8];
         tests[0] = "This comment is so good.";                            // OK
@@ -86,7 +154,7 @@ public class checkLabels {
                 System.out.println(testObject.checkLabels(analyzers, test));
                 numberOfAnalyzer++;
             }
-            numberOfTest++; 
+            numberOfTest++;
         }
         System.out.println("Fin");
     }
@@ -101,43 +169,7 @@ public class checkLabels {
         }
     }
 
-    public class SpamAnalyzer implements TextAnalyzer {
-        List<String> spamArr;
 
-        public SpamAnalyzer(String[] spamKeywords) {
-            if (spamKeywords != null) {
-                spamArr = Arrays.asList(spamKeywords);
-                System.out.println("add");
-            }
 
-        }
 
-        @Override
-        public Label processText(String text) {
-            return null;
-        }
-    }
-
-    private class NegativeTextAnalyzer implements TextAnalyzer {
-        @Override
-        public Label processText(String text) {
-            return null;
-        }
-    }
-
-    private class TooLongTextAnalyzer implements TextAnalyzer {
-        int comment_MaxLength;
-
-        public TooLongTextAnalyzer(int commentMaxLength) {
-            if (commentMaxLength>0) {
-                comment_MaxLength = commentMaxLength;
-                System.out.println("add MaxLength");
-            }
-        }
-
-        @Override
-        public Label processText(String text) {
-            return null;
-        }
-    }
 }
